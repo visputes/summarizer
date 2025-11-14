@@ -10,8 +10,9 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: "Text input is required." });
     }
 
+    // NEW WORKING ENDPOINT
     const response = await fetch(
-      "https://router.huggingface.co/hf-inference/v1/models/sshleifer/distilbart-cnn-12-6",
+      "https://router.huggingface.co/hf-inference/models/facebook/bart-large-cnn",
       {
         method: "POST",
         headers: {
@@ -22,18 +23,21 @@ export default async function handler(req, res) {
       }
     );
 
-    if (!response.ok) {
-      const errorText = await response.text();
-      return res.status(500).json({ error: errorText });
-    }
-
     const data = await response.json();
 
-    const summary = data[0]?.summary_text || "No summary generated.";
+    if (!response.ok) {
+      return res.status(500).json({ error: data.error || "Summarization failed" });
+    }
+
+    const summary =
+      data?.generated_text ||
+      data[0]?.summary_text ||
+      "No summary generated.";
+
     return res.status(200).json({ summary });
 
   } catch (error) {
-    console.error("Error summarizing:", error);
+    console.error("Summarizer Error:", error);
     return res.status(500).json({ error: "Internal server error" });
   }
 }
