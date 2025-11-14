@@ -11,7 +11,7 @@ export default async function handler(req, res) {
     }
 
     const response = await fetch(
-      "https://api-inference.huggingface.co/models/sshleifer/distilbart-cnn-12-6",
+      "https://router.huggingface.co/hf-inference/v1/models/sshleifer/distilbart-cnn-12-6",
       {
         method: "POST",
         headers: {
@@ -22,16 +22,16 @@ export default async function handler(req, res) {
       }
     );
 
-    const data = await response.json();
-
-    if (data.error) {
-      return res
-        .status(500)
-        .json({ error: data.error || "Failed to generate summary" });
+    if (!response.ok) {
+      const errorText = await response.text();
+      return res.status(500).json({ error: errorText });
     }
+
+    const data = await response.json();
 
     const summary = data[0]?.summary_text || "No summary generated.";
     return res.status(200).json({ summary });
+
   } catch (error) {
     console.error("Error summarizing:", error);
     return res.status(500).json({ error: "Internal server error" });
