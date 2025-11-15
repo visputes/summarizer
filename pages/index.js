@@ -41,9 +41,21 @@ export default function Home() {
   return (
     <div style={{ maxWidth: 700, margin: "50px auto", fontFamily: "Arial" }}>
       <h1>🧠 Text Summarizer</h1>
+
+      {/* FIXED TEXTAREA */}
       <textarea
-        rows="8"
-        style={{ width: "100%", padding: "10px", fontSize: "16px" }}
+        rows="10"
+        style={{
+          width: "100%",
+          padding: "10px",
+          fontSize: "16px",
+          whiteSpace: "pre-wrap",
+          overflowWrap: "break-word",
+          outline: "none",
+          resize: "vertical",
+          border: "1px solid #ccc",
+          borderRadius: "5px",
+        }}
         placeholder="Paste your text here..."
         value={text}
         onChange={(e) => setText(e.target.value)}
@@ -57,7 +69,9 @@ export default function Home() {
           backgroundColor: "#0070f3",
           color: "white",
           border: "none",
+          borderRadius: "5px",
           cursor: "pointer",
+          fontSize: "16px",
         }}
         disabled={loading}
       >
@@ -81,7 +95,7 @@ export default function Home() {
           }}
         >
           <h3>Summary:</h3>
-          <p>{summary}</p>
+          <p style={{ whiteSpace: "pre-wrap" }}>{summary}</p>
         </div>
       )}
     </div>
