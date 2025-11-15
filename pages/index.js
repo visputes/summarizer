@@ -16,11 +16,14 @@ export default function Home() {
     setError("");
     setSummary("");
 
+    // 🟢 FIX: Remove Times of India "Read more at:" link automatically
+    const cleanedText = text.replace(/Read more at:[\s\S]*/i, "").trim();
+
     try {
       const response = await fetch("/api/summarize", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ text }),
+        body: JSON.stringify({ text: cleanedText }),
       });
 
       const data = await response.json();
